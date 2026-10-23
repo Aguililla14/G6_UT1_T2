@@ -83,7 +83,7 @@ public class Avion {
 
     
     // Bucle infinito del avion: cada segundo muestra sus datos.
-    // No usa hilos, el avion se ejecuta como un proceso aparte (ProcessBuilder)
+    // No usa hilos (ni Runnable ni Thread.sleep)
     public void run() {
         while (true) {
             FormateadorConsola.mostrar(id, estado,
@@ -98,16 +98,5 @@ public class Avion {
         while (System.currentTimeMillis() < fin) {
             // no hace nada, solo deja pasar el tiempo
         }
-    }
-
-    // Punto de entrada del proceso del avion.
-    // Se lanza asi: java Avion A1 40.42 -3.70 10000 "EN VUELO"
-    public static void main(String[] args) {
-        Avion avion = new Avion(args[0],
-                Double.parseDouble(args[1]),
-                Double.parseDouble(args[2]),
-                Integer.parseInt(args[3]),
-                args[4]);
-        avion.run();
     }
 }
