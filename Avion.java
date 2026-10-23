@@ -16,6 +16,9 @@ public class Avion {
         this.altitud = altitud;
         this.estado = estado;
     }
+    public Avion() {
+    
+    }
 
     public String getId() {
         return id;
@@ -64,4 +67,19 @@ public class Avion {
                 + " | Altitud: " + altitud + " m"
                 + " | Estado: " + estado;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Avion avion = (Avion) o;
+        return java.util.Objects.equals(id, avion.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hash(id);
+    }
+
+    
 }
