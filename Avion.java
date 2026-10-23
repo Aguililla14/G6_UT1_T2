@@ -82,4 +82,32 @@ public class Avion {
     }
 
     
+    // Bucle infinito del avion: cada segundo muestra sus datos.
+    // No usa hilos, el avion se ejecuta como un proceso aparte (ProcessBuilder)
+    public void run() {
+        while (true) {
+            FormateadorConsola.mostrar(id, estado,
+                    "Posicion: " + x + ", " + y + " | Altitud: " + altitud + " m");
+            esperar(1000);
+        }
+    }
+
+    // Espera los milisegundos indicados sin usar Thread.sleep
+    private void esperar(long milisegundos) {
+        long fin = System.currentTimeMillis() + milisegundos;
+        while (System.currentTimeMillis() < fin) {
+            // no hace nada, solo deja pasar el tiempo
+        }
+    }
+
+    // Punto de entrada del proceso del avion.
+    // Se lanza asi: java Avion A1 40.42 -3.70 10000 "EN VUELO"
+    public static void main(String[] args) {
+        Avion avion = new Avion(args[0],
+                Double.parseDouble(args[1]),
+                Double.parseDouble(args[2]),
+                Integer.parseInt(args[3]),
+                args[4]);
+        avion.run();
+    }
 }
