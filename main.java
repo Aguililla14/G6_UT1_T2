@@ -1,5 +1,7 @@
 
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class main {
@@ -34,6 +36,9 @@ public class main {
         // y el recolector lee los mensajes que escribe cada uno.
         Controlador controlador = new Controlador();
         RecolectorMensajes recolector = new RecolectorMensajes();
+
+        // Cada avion escribe sus mensajes en un archivo propio.
+        ArrayList<File> archivos = new ArrayList<>();
 
         // Recorremos el array para iniciar cada aeronave.
         // El bucle se ejecutara siete veces.
@@ -85,13 +90,20 @@ public class main {
 
             try {
 
+                // Archivo temporal donde el avion escribe sus mensajes.
+                // Se borra solo al terminar el programa.
+                File archivo = File.createTempFile("AVION_" + id, ".txt");
+                archivo.deleteOnExit();
+                pb.redirectOutput(archivo);
+
                 // Iniciamos el proceso independiente.
                 // Cada avion ejecutara su propia simulacion.
                 Process proceso = pb.start();
 
                 // Guardamos el proceso en el controlador,
                 // que ademas avisa de que se ha iniciado.
-                controlador.registrarProceso(id, proceso);
+                controlador.registrarProceso("AVION_" + id, proceso);
+                archivos.add(archivo);
 
             } catch (IOException e) {
 
@@ -108,6 +120,10 @@ public class main {
 
         }
 
+        // Esperamos a que todos los aviones hayan terminado.
+        System.out.println("Esperando a que terminen los aviones...");
+        controlador.esperarFinalizacion();
+
         // Recogemos los mensajes de cada avion, uno detras de otro.
         // Sin hilos no se pueden leer todos a la vez: se leen
         // todos los mensajes de A1, luego los de A2, etc.
@@ -116,11 +132,16 @@ public class main {
         List<String> ids = controlador.obtenerIdentificadores();
 
         for (int i = 0; i < procesos.size(); i++) {
-            recolector.recogerMensajes(procesos.get(i), ids.get(i));
-        }
+            recolector.recogerMensajes(archivos.get(i), ids.get(i));
 
-        // Esperamos a que todos los aviones hayan terminado.
-        controlador.esperarFinalizacion();
+            // Si el proceso no ha terminado con codigo 0,
+            // el avion ha muerto de forma inesperada.
+            int codigo = procesos.get(i).exitValue();
+            if (codigo != 0) {
+                FormateadorConsola.mostrar(ids.get(i), "ERROR",
+                        "El proceso del avion ha muerto (codigo " + codigo + ")");
+            }
+        }
 
     }
 
