@@ -7,6 +7,11 @@ public class Avion {
     private int altitud;
     private String estado;
 
+    // Datos buenos que se guardan mientras se envian datos absurdos
+    private boolean datosAbsurdos = false;
+    private int altitudBuena;
+    private double xBuena;
+
     public Avion(String id, double x, double y, int altitud, String estado) {
         this.id = id;
         this.x = x;
@@ -129,21 +134,37 @@ public class Avion {
     }
 
     public void mover() {
-    x = x + 0.5;
-    y = y + 0.5;
 
-    altitud = altitud + (int) (Math.random() * 201 - 100);
+        // Si el ultimo mensaje llevaba datos absurdos,
+        // el avion vuelve a sus datos buenos
+        if (datosAbsurdos) {
+            altitud = altitudBuena;
+            x = xBuena;
+            datosAbsurdos = false;
+        }
 
-    if (Math.random() < 0.10) {
-        int tipo = (int) (Math.random() * 2);
+        x = x + 0.5;
+        y = y + 0.5;
 
-        if (tipo == 0) {
-            altitud = -100;
-        } else {
-            x = x + 100000;
+        altitud = altitud + (int) (Math.random() * 201 - 100);
+
+        if (Math.random() < 0.10) {
+
+            // Guardamos los datos buenos antes de estropearlos,
+            // asi el fallo solo dura un mensaje
+            altitudBuena = altitud;
+            xBuena = x;
+            datosAbsurdos = true;
+
+            int tipo = (int) (Math.random() * 2);
+
+            if (tipo == 0) {
+                altitud = -100;
+            } else {
+                x = x + 100000;
+            }
         }
     }
-}
 
     private void esperar(long milisegundos) {
 
