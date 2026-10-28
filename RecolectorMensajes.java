@@ -15,14 +15,17 @@ public class RecolectorMensajes {
 
             while ((linea = lector.readLine()) != null) {
 
-                String[] datos = linea.split("\\|", 3);
+                String[] datos = linea.split("\\|", 4);
 
-                if (datos.length == 3) {
+                if (datos.length == 4) {
 
-                    String estado = datos[1];
-                    String mensaje = datos[2];
+                    // La hora es la que puso el avion al enviar el mensaje
+                    String hora = datos[0];
+                    String estado = datos[2];
+                    String mensaje = datos[3];
 
                     FormateadorConsola.mostrar(
+                            hora,
                             identificador,
                             estado,
                             mensaje
@@ -30,13 +33,13 @@ public class RecolectorMensajes {
 
                     // Si los datos no tienen sentido, avisamos con [ERROR]
                     if (!datosValidos(mensaje)) {
-                        FormateadorConsola.mostrar(identificador, "ERROR",
+                        FormateadorConsola.mostrar(hora, identificador, "ERROR",
                                 "Datos invalidos recibidos: " + mensaje);
                     }
 
                 } else {
 
-                    // La linea no tiene el formato id|estado|mensaje
+                    // La linea no tiene el formato hora|id|estado|mensaje
                     FormateadorConsola.mostrar(identificador, "ERROR",
                             "Mensaje no valido: " + linea);
                 }

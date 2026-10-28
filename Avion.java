@@ -122,8 +122,10 @@ public class Avion {
         );
     }
 
+    // Envia el mensaje con la hora a la que se genera: hora|id|estado|mensaje
     private void enviarMensaje(String estado, String mensaje) {
-        System.out.println(id + "|" + estado + "|" + mensaje);
+        System.out.println(FormateadorConsola.horaActual()
+                + "|" + id + "|" + estado + "|" + mensaje);
     }
 
     public void mover() {
