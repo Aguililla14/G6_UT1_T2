@@ -127,12 +127,21 @@ public class Avion {
     }
 
     public void mover() {
+    x = x + 0.5;
+    y = y + 0.5;
 
-        x = x + 0.5;
-        y = y + 0.5;
+    altitud = altitud + (int) (Math.random() * 201 - 100);
 
-        altitud = altitud + (int) (Math.random() * 201) - 100;
+    if (Math.random() < 0.10) {
+        int tipo = (int) (Math.random() * 2);
+
+        if (tipo == 0) {
+            altitud = -100;
+        } else {
+            x = x + 100000;
+        }
     }
+}
 
     private void esperar(long milisegundos) {
 
