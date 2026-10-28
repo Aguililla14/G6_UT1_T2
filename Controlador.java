@@ -49,11 +49,16 @@ public class Controlador {
         for (Process proceso : procesos) {
             try {
                 proceso.waitFor();
+                
             } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                System.out.println("Se interrumpió la espera de los aviones.");
+                // Informa si se interrumpe la espera de los aviones.
+                System.out.println(
+                        "Se interrumpió la espera de los aviones."
+                );
                 return;
             }
+
+           
         }
     }
 }
