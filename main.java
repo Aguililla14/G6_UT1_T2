@@ -42,7 +42,7 @@ public class main {
             double y = 200 + i * 30;
 
             // Generamos la altitud inicial de cada aeronave.
-            double altitud = 10000 + i * 1000;
+            int altitud = 10000 + i * 1000;
 
             // Creamos un ProcessBuilder para configurar
             // un nuevo proceso Java independiente.
@@ -57,8 +57,8 @@ public class main {
                     // Ruta donde se encuentran las clases Java.
                     classpath,
 
-                    // Clase que ejecutars el proceso hijo.
-                    "Avion",
+                    // Clase que ejecutara el proceso hijo.
+                    "ProcesoAvion",
 
                     // Pasamos el identificador del avion.
                     id,
