@@ -1,14 +1,12 @@
 
 public class Avion {
 
-    // Datos de cada aeronave
     private String id;
     private double x;
     private double y;
     private int altitud;
     private String estado;
 
-    // Constructor que recibe todos los datos del avion
     public Avion(String id, double x, double y, int altitud, String estado) {
         this.id = id;
         this.x = x;
@@ -17,7 +15,6 @@ public class Avion {
         this.estado = estado;
     }
 
-    // Constructor vacio
     public Avion() {
     }
 
@@ -84,71 +81,65 @@ public class Avion {
         return java.util.Objects.hash(id);
     }
 
-    // Bucle principal del avion
     public void run() {
 
-        // Contador de actualizaciones
         int contador = 0;
 
-        // El avion realiza como maximo 30 actualizaciones
         while (contador < 30) {
 
-            // Comprueba si se pierde la comunicacion
-            // Existe un 5% de probabilidad en cada actualizacion
+            // Probabilidad del 5 % de perder la comunicación.
             if (Math.random() < 0.05) {
 
-                // Actualiza el estado del avion
                 estado = "SIN COMUNICACION";
 
-                // Muestra el mensaje de error
-                FormateadorConsola.mostrar(id, estado,
-                        "Perdida de comunicacion con el avion.");
+                enviarMensaje(
+                        estado,
+                        "Perdida de comunicacion con el avion."
+                );
 
-                // Finaliza el proceso con codigo de error
+                // Finaliza únicamente este proceso hijo.
                 System.exit(1);
-
-                // Evita continuar con la ejecucion
-                return;
             }
 
-            // Mueve el avion
             mover();
 
-            // Muestra los datos actualizados
-            FormateadorConsola.mostrar(id, estado,
-                    "Posicion: " + x + ", " + y
-                    + " | Altitud: " + altitud + " m");
+            enviarMensaje(
+                    "OK",
+                    "Altitud: " + altitud + " m"
+                            + " | Posicion: " + x + ", " + y
+            );
 
-            // Incrementa el contador
             contador++;
 
-            // Espera un segundo
             esperar(1000);
         }
 
-        // Actualiza el estado al finalizar normalmente
         estado = "FINALIZADO";
 
-        // Muestra el mensaje de finalizacion
-        FormateadorConsola.mostrar(id, estado,
-                "El avion ha completado sus 30 actualizaciones.");
+        enviarMensaje(
+                estado,
+                "El avion ha completado sus 30 actualizaciones."
+        );
     }
 
-    // Mueve el avion en cada actualizacion
+    private void enviarMensaje(String estado, String mensaje) {
+        System.out.println(id + "|" + estado + "|" + mensaje);
+    }
+
     public void mover() {
+
         x = x + 0.5;
         y = y + 0.5;
 
         altitud = altitud + (int) (Math.random() * 201) - 100;
     }
 
-    // Espera los milisegundos indicados sin usar Thread.sleep
     private void esperar(long milisegundos) {
 
         long fin = System.currentTimeMillis() + milisegundos;
 
         while (System.currentTimeMillis() < fin) {
-            // Espera hasta que transcurra el tiempo indicado
+            // Espera activa sin utilizar Thread.sleep().
         }
     }
 }

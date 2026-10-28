@@ -1,31 +1,37 @@
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
-// Clase encargada de recoger los mensajes de los aviones.
 public class RecolectorMensajes {
 
-    // Lee los mensajes que escribe un proceso de avión.
-    public void recogerMensajes(Process proceso, String identificador) {
+    public void recogerMensajes(File archivo, String identificador) {
 
-        // Abre el flujo de salida del proceso para leer sus mensajes.
         try (BufferedReader lector = new BufferedReader(
-                new InputStreamReader(proceso.getInputStream()))) {
+                new FileReader(archivo))) {
 
-            String mensaje;
+            String linea;
 
-            // Lee y muestra los mensajes que llegan del avión.
-            while ((mensaje = lector.readLine()) != null) {
+            while ((linea = lector.readLine()) != null) {
 
-                System.out.println(
-                        "[" + identificador + "] " + mensaje
-                );
+                String[] datos = linea.split("\\|", 3);
+
+                if (datos.length == 3) {
+
+                    String estado = datos[1];
+                    String mensaje = datos[2];
+
+                    FormateadorConsola.mostrar(
+                            identificador,
+                            estado,
+                            mensaje
+                    );
+                }
             }
 
         } catch (IOException e) {
 
-            // Informa si ocurre un error al leer los mensajes.
             System.out.println(
                     "Error al recoger mensajes de " + identificador
             );
