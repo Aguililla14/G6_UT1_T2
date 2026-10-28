@@ -8,7 +8,7 @@ public class Avion {
     private int altitud;
     private String estado;
 
-    // Constructor generico: recibe todos los datos del avion
+    // Constructor que recibe todos los datos del avion
     public Avion(String id, double x, double y, int altitud, String estado) {
         this.id = id;
         this.x = x;
@@ -16,8 +16,9 @@ public class Avion {
         this.altitud = altitud;
         this.estado = estado;
     }
+
+    // Constructor vacio
     public Avion() {
-    
     }
 
     public String getId() {
@@ -72,7 +73,9 @@ public class Avion {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         Avion avion = (Avion) o;
+
         return java.util.Objects.equals(id, avion.id);
     }
 
@@ -81,31 +84,39 @@ public class Avion {
         return java.util.Objects.hash(id);
     }
 
-    
-    // Bucle infinito del avion: cada segundo muestra sus datos.
-    // No usa hilos (ni Runnable ni Thread.sleep)
+
     public void run() {
-        while (true) {
+
+        int contador = 0;
+
+        while (contador < 30) {
+
             mover();
-            FormateadorConsola.mostrar(id, estado,
-                    "Posicion: " + x + ", " + y + " | Altitud: " + altitud + " m");
+            FormateadorConsola.mostrar(id, estado,"Posicion: " + x + ", " + y  + " | Altitud: " + altitud + " m");
+            contador++;
             esperar(1000);
         }
+
+        // Mensaje de finalizacion
+        FormateadorConsola.mostrar(id, "FINALIZADO",
+                "El avion ha completado sus 30 actualizaciones.");
     }
 
-    // Mueve el avion un poco en cada vuelta del bucle, como en un vuelo real:
-    // avanza en X e Y y sube o baja hasta 100 m
+    // Mueve el avion en cada actualizacion
     public void mover() {
         x = x + 0.5;
         y = y + 0.5;
+
         altitud = altitud + (int) (Math.random() * 201) - 100;
     }
 
     // Espera los milisegundos indicados sin usar Thread.sleep
     private void esperar(long milisegundos) {
+
         long fin = System.currentTimeMillis() + milisegundos;
+
         while (System.currentTimeMillis() < fin) {
-            // no hace nada, solo deja pasar el tiempo
+            // No hace nada, solo deja pasar el tiempo
         }
     }
 }
