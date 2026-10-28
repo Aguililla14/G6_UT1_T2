@@ -86,10 +86,19 @@ public class Avion {
     // No usa hilos (ni Runnable ni Thread.sleep)
     public void run() {
         while (true) {
+            mover();
             FormateadorConsola.mostrar(id, estado,
                     "Posicion: " + x + ", " + y + " | Altitud: " + altitud + " m");
             esperar(1000);
         }
+    }
+
+    // Mueve el avion un poco en cada vuelta del bucle, como en un vuelo real:
+    // avanza en X e Y y sube o baja hasta 100 m
+    public void mover() {
+        x = x + 0.5;
+        y = y + 0.5;
+        altitud = altitud + (int) (Math.random() * 201) - 100;
     }
 
     // Espera los milisegundos indicados sin usar Thread.sleep
