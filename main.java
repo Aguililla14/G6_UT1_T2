@@ -1,4 +1,5 @@
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,8 +38,9 @@ public class main {
         Controlador controlador = new Controlador();
         RecolectorMensajes recolector = new RecolectorMensajes();
 
-        // Cada avion escribe sus mensajes en un archivo propio.
-        ArrayList<File> archivos = new ArrayList<>();
+        // Cada avion escribe sus mensajes en un archivo propio,
+        // y aqui guardamos un lector abierto de cada archivo.
+        ArrayList<BufferedReader> lectores = new ArrayList<>();
 
         // Recorremos el array para iniciar cada aeronave.
         // El bucle se ejecutara siete veces.
@@ -103,7 +105,7 @@ public class main {
                 // Guardamos el proceso en el controlador,
                 // que ademas avisa de que se ha iniciado.
                 controlador.registrarProceso("AVION_" + id, proceso);
-                archivos.add(archivo);
+                lectores.add(recolector.abrir(archivo));
 
             } catch (IOException e) {
 
@@ -120,27 +122,57 @@ public class main {
 
         }
 
-        // Esperamos a que todos los aviones hayan terminado.
-        System.out.println("Esperando a que terminen los aviones...");
-        controlador.esperarFinalizacion();
-
-        // Recogemos los mensajes de cada avion, uno detras de otro.
-        // Sin hilos no se pueden leer todos a la vez: se leen
-        // todos los mensajes de A1, luego los de A2, etc.
-        // Asi no se mezclan en pantalla.
+        // Recogemos los mensajes en directo, sin hilos: damos vueltas
+        // mirando el archivo de cada avion y mostrando sus lineas nuevas.
+        // Cada linea sale entera, asi que no se mezclan en pantalla.
         List<Process> procesos = controlador.obtenerProcesos();
         List<String> ids = controlador.obtenerIdentificadores();
 
-        for (int i = 0; i < procesos.size(); i++) {
-            recolector.recogerMensajes(archivos.get(i), ids.get(i));
+        boolean[] terminado = new boolean[procesos.size()];
+        int quedan = procesos.size();
 
-            // Si el proceso no ha terminado con codigo 0,
-            // el avion ha muerto de forma inesperada.
-            int codigo = procesos.get(i).exitValue();
-            if (codigo != 0) {
-                FormateadorConsola.mostrar(ids.get(i), "ERROR",
-                        "El proceso del avion ha muerto (codigo " + codigo + ")");
+        while (quedan > 0) {
+
+            for (int i = 0; i < procesos.size(); i++) {
+
+                if (terminado[i]) {
+                    continue;
+                }
+
+                // Miramos si sigue vivo ANTES de leer: si ya ha acabado,
+                // lo que leamos ahora es todo lo que escribio.
+                boolean vivo = procesos.get(i).isAlive();
+
+                recolector.leerNuevos(lectores.get(i), ids.get(i));
+
+                if (!vivo) {
+
+                    terminado[i] = true;
+                    quedan--;
+                    recolector.cerrar(lectores.get(i));
+
+                    // Si el proceso no ha terminado con codigo 0,
+                    // el avion ha muerto de forma inesperada.
+                    int codigo = procesos.get(i).exitValue();
+                    if (codigo != 0) {
+                        FormateadorConsola.mostrar(ids.get(i), "ERROR",
+                                "El proceso del avion ha muerto (codigo " + codigo + ")");
+                    }
+                }
             }
+
+            // Pequeña pausa para no estar leyendo los archivos sin parar
+            esperar(100);
+        }
+    }
+
+    // Espera los milisegundos indicados sin usar Thread.sleep
+    private static void esperar(long milisegundos) {
+
+        long fin = System.currentTimeMillis() + milisegundos;
+
+        while (System.currentTimeMillis() < fin) {
+            // Espera activa sin utilizar Thread.sleep().
         }
 
     }
