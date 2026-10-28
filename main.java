@@ -1,5 +1,6 @@
 
 import java.io.IOException;
+import java.util.List;
 
 public class main {
 
@@ -28,6 +29,11 @@ public class main {
                 "A6",
                 "A7"
         };
+
+        // El controlador guarda los procesos de los aviones
+        // y el recolector lee los mensajes que escribe cada uno.
+        Controlador controlador = new Controlador();
+        RecolectorMensajes recolector = new RecolectorMensajes();
 
         // Recorremos el array para iniciar cada aeronave.
         // El bucle se ejecutara siete veces.
@@ -73,22 +79,19 @@ public class main {
                     String.valueOf(altitud)
             );
 
-            // Hacemos que el proceso hijo utilice
-            // la misma consola que el proceso principal.
-            // Asi podremos ver los mensajes de cada avion.
-            pb.inheritIO();
+            // Juntamos los errores del proceso hijo con su salida normal,
+            // asi el recolector tambien los lee.
+            pb.redirectErrorStream(true);
 
             try {
 
                 // Iniciamos el proceso independiente.
                 // Cada avion ejecutara su propia simulacion.
-                pb.start();
+                Process proceso = pb.start();
 
-                // Mostramos un mensaje indicando
-                // que el proceso del avion se ha iniciado.
-                System.out.println(
-                        "Proceso iniciado para el avion " + id
-                );
+                // Guardamos el proceso en el controlador,
+                // que ademas avisa de que se ha iniciado.
+                controlador.registrarProceso(id, proceso);
 
             } catch (IOException e) {
 
@@ -105,6 +108,20 @@ public class main {
 
         }
 
+        // Recogemos los mensajes de cada avion, uno detras de otro.
+        // Sin hilos no se pueden leer todos a la vez: se leen
+        // todos los mensajes de A1, luego los de A2, etc.
+        // Asi no se mezclan en pantalla.
+        List<Process> procesos = controlador.obtenerProcesos();
+        List<String> ids = controlador.obtenerIdentificadores();
+
+        for (int i = 0; i < procesos.size(); i++) {
+            recolector.recogerMensajes(procesos.get(i), ids.get(i));
+        }
+
+        // Esperamos a que todos los aviones hayan terminado.
+        controlador.esperarFinalizacion();
+
     }
 
 }
@@ -114,7 +131,9 @@ public class main {
 /*
 ProcessBuilder: permite configurar un proceso externo.
 pb.start(): inicia el proceso.
-inheritIO(): comparte la entrada y salida de la consola.
+redirectErrorStream(true): junta los errores del proceso con su salida normal.
+Controlador: guarda los procesos de los aviones y espera a que terminen.
+RecolectorMensajes: lee los mensajes que escribe cada proceso.
 java.class.path: indica donde buscar las clases.
 String.valueOf(): convierte los valores numericos en cadenas.
 IOException: controla los errores que pueden producirse al iniciar el proceso.
