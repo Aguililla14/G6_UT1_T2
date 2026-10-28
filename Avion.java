@@ -84,21 +84,53 @@ public class Avion {
         return java.util.Objects.hash(id);
     }
 
-
+    // Bucle principal del avion
     public void run() {
 
+        // Contador de actualizaciones
         int contador = 0;
 
+        // El avion realiza como maximo 30 actualizaciones
         while (contador < 30) {
 
+            // Comprueba si se pierde la comunicacion
+            // Existe un 5% de probabilidad en cada actualizacion
+            if (Math.random() < 0.05) {
+
+                // Actualiza el estado del avion
+                estado = "SIN COMUNICACION";
+
+                // Muestra el mensaje de error
+                FormateadorConsola.mostrar(id, estado,
+                        "Perdida de comunicacion con el avion.");
+
+                // Finaliza el proceso con codigo de error
+                System.exit(1);
+
+                // Evita continuar con la ejecucion
+                return;
+            }
+
+            // Mueve el avion
             mover();
-            FormateadorConsola.mostrar(id, estado,"Posicion: " + x + ", " + y  + " | Altitud: " + altitud + " m");
+
+            // Muestra los datos actualizados
+            FormateadorConsola.mostrar(id, estado,
+                    "Posicion: " + x + ", " + y
+                    + " | Altitud: " + altitud + " m");
+
+            // Incrementa el contador
             contador++;
+
+            // Espera un segundo
             esperar(1000);
         }
 
-        // Mensaje de finalizacion
-        FormateadorConsola.mostrar(id, "FINALIZADO",
+        // Actualiza el estado al finalizar normalmente
+        estado = "FINALIZADO";
+
+        // Muestra el mensaje de finalizacion
+        FormateadorConsola.mostrar(id, estado,
                 "El avion ha completado sus 30 actualizaciones.");
     }
 
@@ -116,7 +148,7 @@ public class Avion {
         long fin = System.currentTimeMillis() + milisegundos;
 
         while (System.currentTimeMillis() < fin) {
-            // No hace nada, solo deja pasar el tiempo
+            // Espera hasta que transcurra el tiempo indicado
         }
     }
 }
