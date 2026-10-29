@@ -65,10 +65,7 @@ public class Avion {
 
     @Override
     public String toString() {
-        return "Avion " + id
-                + " | Posicion: " + x + ", " + y
-                + " | Altitud: " + altitud + " m"
-                + " | Estado: " + estado;
+        return "Avion " + id + " | Posicion: " + x + ", " + y + " | Altitud: " + altitud + " m" + " | Estado: " + estado;
     }
 
     @Override
@@ -97,10 +94,7 @@ public class Avion {
 
                 estado = "SIN COMUNICACION";
 
-                enviarMensaje(
-                        estado,
-                        "Perdida de comunicacion con el avion."
-                );
+                enviarMensaje(estado,"Perdida de comunicacion con el avion.");
 
                 // Finaliza únicamente este proceso hijo.
                 System.exit(1);
@@ -108,11 +102,7 @@ public class Avion {
 
             mover();
 
-            enviarMensaje(
-                    "OK",
-                    "Altitud: " + altitud + " m"
-                            + " | Posicion: " + x + ", " + y
-            );
+            enviarMensaje("OK", "Altitud: " + altitud + " m" + " | Posicion: " + x + ", " + y );
 
             contador++;
 
@@ -121,16 +111,12 @@ public class Avion {
 
         estado = "FINALIZADO";
 
-        enviarMensaje(
-                estado,
-                "El avion ha completado sus 30 actualizaciones."
-        );
+        enviarMensaje(estado,"El avion ha completado sus 30 actualizaciones.");
     }
 
     // Envia el mensaje con la hora a la que se genera: hora|id|estado|mensaje
     private void enviarMensaje(String estado, String mensaje) {
-        System.out.println(FormateadorConsola.horaActual()
-                + "|" + id + "|" + estado + "|" + mensaje);
+        System.out.println(FormateadorConsola.horaActual() + "|" + id + "|" + estado + "|" + mensaje);
     }
 
     public void mover() {

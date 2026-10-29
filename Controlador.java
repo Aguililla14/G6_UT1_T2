@@ -12,7 +12,7 @@ public class Controlador {
     // Guarda los identificadores de los aviones.
     private final List<String> identificadores = new ArrayList<>();
 
-    // Inicia un proceso de avión y lo registra en el controlador.
+    // Inicia un proceso de avion y lo registra en el controlador.
     public void registrarProceso(String identificador, Process proceso) {
 
         identificadores.add(identificador);
@@ -21,7 +21,7 @@ public class Controlador {
         System.out.println("Proceso iniciado para el avión " + identificador);
     }
 
-    // Devuelve los procesos que están registrados.
+    // Devuelve los procesos que estan registrados.
     public List<Process> obtenerProcesos() {
         return new ArrayList<>(procesos);
     }

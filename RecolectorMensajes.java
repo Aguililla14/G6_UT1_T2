@@ -51,24 +51,17 @@ public class RecolectorMensajes {
             String estado = datos[2];
             String mensaje = datos[3];
 
-            FormateadorConsola.mostrar(
-                    hora,
-                    identificador,
-                    estado,
-                    mensaje
-            );
+            FormateadorConsola.mostrar(hora, identificador, estado, mensaje);
 
             // Si los datos no tienen sentido, avisamos con [ERROR]
             if (!datosValidos(mensaje)) {
-                FormateadorConsola.mostrar(hora, identificador, "ERROR",
-                        "Datos invalidos recibidos: " + mensaje);
+                FormateadorConsola.mostrar(hora, identificador, "ERROR", "Datos invalidos recibidos: " + mensaje);
             }
 
         } else {
 
             // La linea no tiene el formato hora|id|estado|mensaje
-            FormateadorConsola.mostrar(identificador, "ERROR",
-                    "Mensaje no valido: " + linea);
+            FormateadorConsola.mostrar(identificador, "ERROR", "Mensaje no valido: " + linea);
         }
     }
 
@@ -84,8 +77,7 @@ public class RecolectorMensajes {
         }
 
         String[] partes = mensaje.split(" \\| ");
-        int altitud = Integer.parseInt(
-                partes[0].replace("Altitud: ", "").replace(" m", ""));
+        int altitud = Integer.parseInt(partes[0].replace("Altitud: ", "").replace(" m", ""));
 
         String[] posicion = partes[1].replace("Posicion: ", "").split(", ");
         double x = Double.parseDouble(posicion[0]);

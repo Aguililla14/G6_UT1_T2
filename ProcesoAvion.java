@@ -9,13 +9,7 @@ public class ProcesoAvion {
         double y = Double.parseDouble(args[2]);
         int altitud = Integer.parseInt(args[3]);
 
-        Avion avion = new Avion(
-                id,
-                x,
-                y,
-                altitud,
-                "OK"
-        );
+        Avion avion = new Avion( id, x, y, altitud, "OK");
 
         avion.run();
     }
