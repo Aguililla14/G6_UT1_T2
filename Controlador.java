@@ -1,9 +1,8 @@
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-// Clase que controla los procesos de los aviones y recoge sus mensajes.
+// Clase que guarda los procesos de los aviones y sus identificadores.
 public class Controlador {
 
     // Guarda los procesos de los aviones que se han iniciado.
@@ -12,7 +11,7 @@ public class Controlador {
     // Guarda los identificadores de los aviones.
     private final List<String> identificadores = new ArrayList<>();
 
-    // Inicia un proceso de avion y lo registra en el controlador.
+    // Registra en el controlador el proceso de un avion ya iniciado.
     public void registrarProceso(String identificador, Process proceso) {
 
         identificadores.add(identificador);
@@ -29,36 +28,5 @@ public class Controlador {
     // Devuelve los identificadores registrados.
     public List<String> obtenerIdentificadores() {
         return new ArrayList<>(identificadores);
-    }
-
-    // Comprueba si todos los procesos de los aviones han terminado.
-    public boolean todosHanTerminado() {
-
-        for (Process proceso : procesos) {
-            if (proceso.isAlive()) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    // Espera a que terminen todos los procesos registrados.
-    public void esperarFinalizacion() {
-
-        for (Process proceso : procesos) {
-            try {
-                proceso.waitFor();
-                
-            } catch (InterruptedException e) {
-                // Informa si se interrumpe la espera de los aviones.
-                System.out.println(
-                        "Se interrumpió la espera de los aviones."
-                );
-                return;
-            }
-
-           
-        }
     }
 }

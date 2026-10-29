@@ -185,8 +185,8 @@ public class main {
 ProcessBuilder: permite configurar un proceso externo.
 pb.start(): inicia el proceso.
 redirectErrorStream(true): junta los errores del proceso con su salida normal.
-Controlador: guarda los procesos de los aviones y espera a que terminen.
-RecolectorMensajes: lee los mensajes que escribe cada proceso.
+Controlador: guarda los procesos de los aviones y sus identificadores.
+RecolectorMensajes: lee los mensajes que escribe cada proceso y comprueba sus datos.
 java.class.path: indica donde buscar las clases.
 String.valueOf(): convierte los valores numericos en cadenas.
 IOException: controla los errores que pueden producirse al iniciar el proceso.

@@ -51,10 +51,10 @@ public class RecolectorMensajes {
             String estado = datos[2];
             String mensaje = datos[3];
 
-            FormateadorConsola.mostrar(hora, identificador, estado, mensaje);
-
-            // Si los datos no tienen sentido, avisamos con [ERROR]
-            if (!datosValidos(mensaje)) {
+            // Si los datos no tienen sentido, solo se muestra el [ERROR]
+            if (datosValidos(mensaje)) {
+                FormateadorConsola.mostrar(hora, identificador, estado, mensaje);
+            } else {
                 FormateadorConsola.mostrar(hora, identificador, "ERROR", "Datos invalidos recibidos: " + mensaje);
             }
 
@@ -76,15 +76,23 @@ public class RecolectorMensajes {
             return true;
         }
 
-        String[] partes = mensaje.split(" \\| ");
-        int altitud = Integer.parseInt(partes[0].replace("Altitud: ", "").replace(" m", ""));
+        // Si el mensaje llega incompleto o con numeros mal escritos,
+        // se considera invalido en lugar de parar la torre de control
+        try {
 
-        String[] posicion = partes[1].replace("Posicion: ", "").split(", ");
-        double x = Double.parseDouble(posicion[0]);
-        double y = Double.parseDouble(posicion[1]);
+            String[] partes = mensaje.split(" \\| ");
+            int altitud = Integer.parseInt(partes[0].replace("Altitud: ", "").replace(" m", ""));
 
-        return altitud >= 0
-                && x >= 0 && x <= 10000
-                && y >= 0 && y <= 10000;
+            String[] posicion = partes[1].replace("Posicion: ", "").split(", ");
+            double x = Double.parseDouble(posicion[0]);
+            double y = Double.parseDouble(posicion[1]);
+
+            return altitud >= 0
+                    && x >= 0 && x <= 10000
+                    && y >= 0 && y <= 10000;
+
+        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+            return false;
+        }
     }
 }
